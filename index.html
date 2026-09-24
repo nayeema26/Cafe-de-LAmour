@@ -1,19 +1,62 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Café de L'Amour</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#fbf5ec;color:#3d2418;font-family:"DM Sans",sans-serif}
-    main{max-width:720px;margin:24px;padding:56px;border-radius:32px;background:#fffdf9;box-shadow:0 20px 60px rgba(61,36,24,.12);text-align:center}
-    h1{font:700 clamp(3rem,8vw,6rem)/.9 "Cormorant Garamond",serif;margin:0 0 16px}
-    p{color:#725f55;line-height:1.7}.heart{font-size:4rem;color:#b98272}
-    a{display:inline-block;margin-top:20px;padding:14px 22px;background:#5a3825;color:#fff;text-decoration:none;border-radius:12px}
-  </style>
-</head>
-<body><main><div class="heart">♡</div><h1>Café de L'Amour</h1><p>Your elegant chocolate & dessert café management system. Start Flask and open the dashboard to manage menu items, categories, customers and orders.</p><a href="http://127.0.0.1:5000/">Open Flask Dashboard</a></main></body>
-</html>
+{% extends "base.html" %}
+{% block title %}Dashboard · Café de L'Amour{% endblock %}
+{% block content %}
+<section class="hero-card mb-4">
+  <div>
+    <p class="eyebrow">WELCOME TO</p>
+    <h1>Café de L'Amour</h1>
+    <p class="lead">A warm little place for chocolate, desserts and memorable moments.</p>
+    <a href="{{ url_for('menu_add') }}" class="btn btn-cocoa">+ Add Dessert</a>
+    <a href="{{ url_for('order_add') }}" class="btn btn-outline-cocoa ms-2">Create Order</a>
+  </div>
+  <div class="hero-mark">♡</div>
+</section>
+
+<div class="row g-3 mb-4">
+  {% for label, value, icon in [
+    ("Menu Items", menu_count, "🍰"), ("Categories", category_count, "✦"),
+    ("Customers", customer_count, "♡"), ("Orders", order_count, "⌁"),
+    ("Revenue", "₹{:,.0f}".format(revenue), "₹"), ("Pending", pending, "◷")
+  ] %}
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100"><div class="stat-icon">{{ icon }}</div><div class="stat-label">{{ label }}</div><div class="stat-value">{{ value }}</div></div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-head"><h2>Recent Orders</h2><a href="{{ url_for('order_list') }}">View all</a></div>
+      <div class="table-responsive">
+        <table class="table elegant-table align-middle">
+          <thead><tr><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+          {% for order in recent_orders %}
+            <tr>
+              <td>{{ order.customer_name }}</td>
+              <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
+              <td><span class="badge status-{{ order.status|lower }}">{{ order.status }}</span></td>
+              <td>{{ order.order_date.strftime("%d %b %Y") }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">No orders yet. Create your first order.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel h-100">
+      <div class="panel-head"><h2>Quick Actions</h2></div>
+      <div class="d-grid gap-2">
+        <a class="quick-link" href="{{ url_for('menu') }}">🍫 Manage Menu</a>
+        <a class="quick-link" href="{{ url_for('category_list') }}">✦ Manage Categories</a>
+        <a class="quick-link" href="{{ url_for('customer_list') }}">♡ Manage Customers</a>
+        <a class="quick-link" href="{{ url_for('order_list') }}">⌁ Manage Orders</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
