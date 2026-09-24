@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Café de L'Amour{% endblock %}
+{% block content %}
+<section class="hero-card mb-4">
+  <div>
+    <p class="eyebrow">WELCOME TO</p>
+    <h1>Café de L'Amour</h1>
+    <p class="lead">A warm little place for chocolate, desserts and memorable moments.</p>
+    <a href="{{ url_for('menu_add') }}" class="btn btn-cocoa">+ Add Dessert</a>
+    <a href="{{ url_for('order_add') }}" class="btn btn-outline-cocoa ms-2">Create Order</a>
+  </div>
+  <div class="hero-mark">♡</div>
+</section>
+
+<div class="row g-3 mb-4">
+  {% for label, value, icon in [
+    ("Menu Items", menu_count, "🍰"), ("Categories", category_count, "✦"),
+    ("Customers", customer_count, "♡"), ("Orders", order_count, "⌁"),
+    ("Revenue", "₹{:,.0f}".format(revenue), "₹"), ("Pending", pending, "◷")
+  ] %}
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="stat-card h-100"><div class="stat-icon">{{ icon }}</div><div class="stat-label">{{ label }}</div><div class="stat-value">{{ value }}</div></div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-head"><h2>Recent Orders</h2><a href="{{ url_for('order_list') }}">View all</a></div>
+      <div class="table-responsive">
+        <table class="table elegant-table align-middle">
+          <thead><tr><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+          {% for order in recent_orders %}
+            <tr>
+              <td>{{ order.customer_name }}</td>
+              <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
+              <td><span class="badge status-{{ order.status|lower }}">{{ order.status }}</span></td>
+              <td>{{ order.order_date.strftime("%d %b %Y") }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">No orders yet. Create your first order.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel h-100">
+      <div class="panel-head"><h2>Quick Actions</h2></div>
+      <div class="d-grid gap-2">
+        <a class="quick-link" href="{{ url_for('menu') }}">🍫 Manage Menu</a>
+        <a class="quick-link" href="{{ url_for('category_list') }}">✦ Manage Categories</a>
+        <a class="quick-link" href="{{ url_for('customer_list') }}">♡ Manage Customers</a>
+        <a class="quick-link" href="{{ url_for('order_list') }}">⌁ Manage Orders</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

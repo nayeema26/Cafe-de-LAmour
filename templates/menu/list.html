@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Menu · Café de L'Amour{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">CURATED MENU</p><h1>Chocolate & Desserts</h1></div><a href="{{ url_for('menu_add') }}" class="btn btn-cocoa">+ Add Item</a></div>
+<form class="panel mb-4 row g-2" method="get">
+  <div class="col-md-6"><input class="form-control" name="q" value="{{ q }}" placeholder="Search desserts..."></div>
+  <div class="col-md-4"><select class="form-select" name="category"><option value="">All categories</option>{% for c in categories %}<option {% if selected_category==c.name %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><button class="btn btn-outline-cocoa w-100">Filter</button></div>
+</form>
+<div class="row g-4">
+{% for item in items %}
+  <div class="col-md-6 col-xl-4">
+    <div class="dessert-card h-100">
+      {% if item.image_url %}<img src="{{ item.image_url }}" alt="{{ item.name }}">{% else %}<div class="dessert-placeholder">🍫</div>{% endif %}
+      <div class="p-3">
+        <div class="d-flex justify-content-between gap-2"><h3>{{ item.name }}</h3><strong>₹{{ "%.2f"|format(item.price) }}</strong></div>
+        <div class="small text-muted mb-2">{{ item.category }}</div><p>{{ item.description }}</p>
+        <span class="badge {% if item.available %}bg-success-subtle text-success{% else %}bg-secondary-subtle text-secondary{% endif %}">{{ "Available" if item.available else "Unavailable" }}</span>
+        <div class="d-flex gap-2 mt-3"><a class="btn btn-sm btn-outline-cocoa" href="{{ url_for('menu_edit', id=item._id) }}">Edit</a><form method="post" action="{{ url_for('menu_delete', id=item._id) }}" onsubmit="return confirmDelete('this menu item')"><button class="btn btn-sm btn-outline-danger">Delete</button></form></div>
+      </div>
+    </div>
+  </div>
+{% else %}<div class="col-12"><div class="empty-state">No menu items found.</div></div>{% endfor %}
+</div>
+{% endblock %}

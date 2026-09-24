@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}New Order · Café de L'Amour{% endblock %}
+{% block content %}
+<div class="form-shell"><div class="page-head"><h1>New Order</h1><a href="{{ url_for('order_list') }}">← Back</a></div>
+<form class="panel" method="post">
+<label>Customer</label><select required class="form-select mb-4" name="customer_id"><option value="">Choose customer</option>{% for c in customers %}<option value="{{ c._id }}">{{ c.name }} · {{ c.phone }}</option>{% endfor %}</select>
+<h3 class="mb-3">Items</h3>
+<div id="order-items">{% for item in items %}<div class="order-row row align-items-center g-2 mb-2"><div class="col-md-6"><div class="form-check"><input class="form-check-input item-check" type="checkbox" name="item_id" value="{{ item._id }}" id="i{{ item._id }}"><label class="form-check-label" for="i{{ item._id }}">{{ item.name }} · ₹{{ "%.2f"|format(item.price) }}</label></div></div><div class="col-md-3"><input class="form-control qty" type="number" name="quantity" min="0" value="0" data-price="{{ item.price }}"></div><div class="col-md-3 line-total">₹0.00</div></div>{% endfor %}</div>
+<div class="total-box mt-4">Estimated Total <strong id="order-total">₹0.00</strong></div>
+<button class="btn btn-cocoa mt-4">Create Order</button>
+</form></div>
+{% endblock %}
+{% block scripts %}<script>initOrderCalculator();</script>{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Customers · Café de L'Amour{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">RELATIONSHIPS</p><h1>Customers</h1></div><a href="{{ url_for('customer_add') }}" class="btn btn-cocoa">+ Add Customer</a></div>
+<form class="panel mb-4 d-flex gap-2"><input class="form-control" name="q" value="{{ q }}" placeholder="Search name, email or phone"><button class="btn btn-outline-cocoa">Search</button></form>
+<div class="panel table-responsive"><table class="table elegant-table align-middle"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th></th></tr></thead><tbody>{% for c in customers %}<tr><td>{{ c.name }}</td><td>{{ c.email }}</td><td>{{ c.phone }}</td><td>{{ c.address }}</td><td><div class="d-flex gap-2"><a class="btn btn-sm btn-outline-cocoa" href="{{ url_for('customer_edit', id=c._id) }}">Edit</a><form method="post" action="{{ url_for('customer_delete', id=c._id) }}" onsubmit="return confirmDelete('this customer')"><button class="btn btn-sm btn-outline-danger">Delete</button></form></div></td></tr>{% else %}<tr><td colspan="5" class="text-center py-4">No customers found.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}
