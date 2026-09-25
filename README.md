@@ -50,7 +50,7 @@ python seed.py
 python app.py
 ```
 
-Open http://127.0.0.1:5000/
+🌐 Live Demo: http://127.0.0.1:5000/
 
 ## Frontend → backend → database
 
