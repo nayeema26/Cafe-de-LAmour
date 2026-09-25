@@ -50,8 +50,6 @@ python seed.py
 python app.py
 ```
 
-🌐 Live Demo: http://127.0.0.1:5000/
-
 ## Frontend → backend → database
 
 Browser form → Flask route → validation → PyMongo → MongoDB → Flask/Jinja2 → HTML response.
